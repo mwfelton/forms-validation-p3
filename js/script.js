@@ -47,8 +47,6 @@ const colorSelect = document.getElementById('color')
 const colorOption = colorSelect.children
 console.log(colorOption);
 
-
-
 colorSelect.disabled = true;
 
 designSelect.addEventListener('change', (e) => {
@@ -72,24 +70,46 @@ designSelect.addEventListener('change', (e) => {
 // "Register for Activities" section
 
 const registerForActivities = document.getElementById('activities');
+console.log(registerForActivities)
 const activitiesCostPTag = document.querySelector('.activities-cost');
-
 let finalTotal = 0;
 
 registerForActivities.addEventListener('change', (e) => {
  const targetDataAttribute = e.target.getAttribute('data-cost')
- console.log(+targetDataAttribute)
- console.log(typeof(+targetDataAttribute))
+//  console.log(+targetDataAttribute)
+//  console.log(typeof(+targetDataAttribute))
 
- if (e.target.checked){
-    finalTotal += +targetDataAttribute 
-} else { 
-    finalTotal -= +targetDataAttribute
-}
+    function checked() {
+        const activitiesLabels = registerForActivities.querySelectorAll('input');
+        const targetDayAndTime = e.target.getAttribute('data-day-and-time');
+    
+        for (let i = 1; i < activitiesLabels.length; i++){
+            const dayAndTimeAttribute = activitiesLabels[i].getAttribute('data-day-and-time');
+        
+            if (targetDayAndTime === dayAndTimeAttribute){
+                activitiesLabels[i].disabled = true;
+                activitiesLabels[i].parentElement.classList.add('disabled');
+                e.target.disabled = false;
+                e.target.parentElement.classList.remove('disabled');
+            } if (!e.target.checked && targetDayAndTime === dayAndTimeAttribute) {
+                activitiesLabels[i].disabled = false;
+                activitiesLabels[i].parentElement.classList.remove('disabled');
+            }
+        }
+    }   
+
+    if (e.target.checked){
+        finalTotal += +targetDataAttribute
+        checked()
+    } else { 
+        finalTotal -= +targetDataAttribute
+        checked()
+    }
 
 activitiesCostPTag.innerHTML = `Total: ${finalTotal}`
 
 });
+
 
 // "Payment Info" section
 
@@ -128,66 +148,144 @@ payment.addEventListener('change', (e) => {
 
 nameInput
 const emailInput = document.getElementById('email');
-registerForActivities
 const ccNum = document.getElementById('cc-num');
 const zipCodeInput = document.getElementById('zip');
 const cvvInput = document.getElementById('cvv');
 const form = document.querySelector("FORM");
-console.log(form)
 
 
-/* Helper function to validate email input */
+// helper funtions - name, email, activity, credit card payment
+
 const nameValidation = () => {
-
     const nameInputValue = nameInput.value
     const nameRegex = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameInputValue);
-
-    console.log(`Name validation test on "${nameInputValue}" evaluates to ${nameRegex}`);
-
     return nameRegex
   }
   
 const emailValidation = () => {
-
-    const emailInputValue = emailInput.value
-    console.log("Email value is: ", `"${emailInputValue}"`);
-  
-    const emailRegex = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValueInput);
-    console.log(`Email validation test on "${emailValueInput}" evaluates to ${emailRegex}`)
-  
+    const emailInputValue = emailInput.value  
+    const emailRegex = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInputValue);
     return emailRegex
   }
   
-  /* Helper function to validate language section */
-  const languageValidation = () => {
-  
-  const languageSectionIsValid = languageTotal > 0;
-  
-  console.log(`Language section validation test evaluates to ${languageSectionIsValid}`);
-  
-  return languageSectionIsValid
+const activityValidation = () => {
+    const activityValid = finalTotal > 0;
+    return activityValid
   }
 
+const ccValidation = () => {
+    const ccInput = ccNum.value
+    const ccRegex = /4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11}/.test(ccInput);
+    return ccRegex
+  }
+
+  const zipValidation = () => {
+    const zipValue = zipCodeInput.value
+    const zipRegex = /^[0-9]{5}(?:-[0-9]{4})?$/.test(zipValue);
+    return zipRegex
+  }
+
+  const cvvValidation = () => {
+    const cvvValue = cvvInput.value
+    const cvvRegex = /^[0-9]{3,4}$/.test(cvvValue);
+    return cvvRegex
+  }
+
+  function visualValidationPass(element){
+    element.parentElement.classList.add('valid');
+    element.parentElement.classList.remove('not-valid');
+    element.parentElement.lastElementChild.display = 'none'
+  }
+  
+  function visualValidationFail(element){
+    element.parentElement.classList.add('not-valid');
+    element.parentElement.classList.remove('valid');
+    element.parentElement.lastElementChild.display = 'block';
+  }
 
 form.addEventListener('submit', (e) => {
 
     e.preventDefault()
 
-    nameValidator()
-    emailValidator()
-    languageValidator()
+    if (!nameValidation()){
+        e.preventDefault()
+        visualValidationFail(nameInput)
+    } else {
+        visualValidationPass(nameInput)
+    }
 
-    e.preventDefault()
+    if (!emailValidation() || emailInput.value === ""){
+        e.preventDefault()
+        visualValidationFail(emailInput)
+        prompt('Email field is invalid')
+    } else {
+        visualValidationPass(emailInput)
+    }
 
+    if (!activityValidation()){
+        e.preventDefault()
+        registerForActivities.classList.add('not-valid');
+        console.log('activity field failed')
+    } else {
+        registerForActivities.classList.add('valid');
+    }
+        
+    if (!ccValidation()){
+        e.preventDefault()
+        visualValidationFail(ccNum)
+    } else {
+        visualValidationPass(ccNum)
+    }
 
+    if (!zipValidation()){
+        e.preventDefault()
+        visualValidationFail(zipCodeInput)
+    } else {
+        visualValidationPass(zipCodeInput)
+    }
 
-
-//   Still in the event listener, use the name validation test variable and an if statement to check if the name value is valid. If false, prevent the form from submitting with an event.preventDefault() statement. Otherwise, do nothing and allow the form to submit.
-
+    if (!cvvValidation()){
+        e.preventDefault()
+        visualValidationFail(cvvInput)
+    } else {
+        visualValidationPass(cvvInput)
+    }
 });
 
 
 
+  // Real-time error message - CC Number
+  
+ccNum.addEventListener('keyup', (e) => {
+    e.preventDefault()
+
+    if (!ccValidation){
+        e.preventDefault()
+        visualValidationFail(ccNum)
+    }
+})
+
+
+// Accessibility:
+
+// Checkbox focus and blur
+
+
+const checkbox = document.querySelectorAll('input[type="checkbox"]');
+
+    for (let i = 0; i < checkbox.length; i++){
+
+        checkbox[i].addEventListener('focus', (e) => {
+            checkbox[i].parentElement.classList.add('focus');
+        })
+
+        checkbox[i].addEventListener('blur', (e) => {
+            checkbox[i].parentElement.classList.remove('focus');
+        })
+    }
+
+    
+    
 
 
 
