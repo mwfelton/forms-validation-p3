@@ -19,3 +19,7 @@ Providing additional information for certain types of errors can be very helpful
 
 For at least one required form section, provide one error message if the field fails on one of its requirements, and a separate message if it fails on one of its other requirements.
 Detail this specific feature in your README.md file.
+
+
+if email is invalid
+error message 
