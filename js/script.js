@@ -28,7 +28,7 @@ jobRoleMenu.addEventListener('change', (e) => {
     if (e.target.value === 'other'){
         otherJobRole.style.display = 'block';
     } else {
-        hideJobField
+        hideJobField()
     }
 });
 
@@ -117,12 +117,25 @@ activitiesCostPTag.innerHTML = `Total: ${finalTotal}`
 
 // Program the "I'm going to pay with" <select> element to listen for user changes. When a change is detected, hide all payment sections in the form’s UI except the selected one.
 
+//  Onload - hide sections
+
+
+
+
 const payment = document.getElementById('payment')
 const creditCardDiv = document.getElementById('credit-card')
 const paypalDiv = document.getElementById('paypal')
 const bitcoinDiv = document.getElementById('bitcoin')
 
-payment.children[1].selected = true
+payment.children[1].setAttribute("class", "selected");
+
+paypalDiv.onload = hidePaymentField(paypalDiv)
+bitcoinDiv.onload = hidePaymentField(bitcoinDiv)
+
+
+function hidePaymentField(method){
+    method.style.display = 'none';
+}
 
 // Use the payment variable above to listen for the change event on this element. When a change is detected, display the <div> element with the id that matches the value of the event.target element. And hide the other two <div> elements.
 
@@ -205,7 +218,7 @@ const ccValidation = () => {
 
 form.addEventListener('submit', (e) => {
 
-    e.preventDefault()
+    
 
     if (!nameValidation()){
         e.preventDefault()
