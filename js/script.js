@@ -127,8 +127,7 @@ const creditCardDiv = document.getElementById('credit-card')
 const paypalDiv = document.getElementById('paypal')
 const bitcoinDiv = document.getElementById('bitcoin')
 
-payment.children[1].setAttribute("class", "selected");
-
+payment.children[1].selected = true
 paypalDiv.onload = hidePaymentField(paypalDiv)
 bitcoinDiv.onload = hidePaymentField(bitcoinDiv)
 
@@ -186,9 +185,17 @@ const activityValidation = () => {
     return activityValid
   }
 
+// original CC regex
+
+// const ccValidation = () => {
+//     const ccInput = ccNum.value
+//     const ccRegex = /4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11}/.test(ccInput);
+//     return ccRegex
+//   }
+
 const ccValidation = () => {
     const ccInput = ccNum.value
-    const ccRegex = /4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11}/.test(ccInput);
+    const ccRegex = /[4|5]\d{15}/.test(ccInput);
     return ccRegex
   }
 
@@ -218,8 +225,6 @@ const ccValidation = () => {
 
 form.addEventListener('submit', (e) => {
 
-    
-
     if (!nameValidation()){
         e.preventDefault()
         visualValidationFail(nameInput)
@@ -243,12 +248,12 @@ form.addEventListener('submit', (e) => {
         registerForActivities.classList.add('valid');
     }
         
-    if (!ccValidation()){
-        e.preventDefault()
-        visualValidationFail(ccNum)
-    } else {
-        visualValidationPass(ccNum)
-    }
+    // if (!ccValidation()){
+    //     e.preventDefault()
+    //     visualValidationFail(ccNum)
+    // } else {
+    //     visualValidationPass(ccNum)
+    // }
 
     if (!zipValidation()){
         e.preventDefault()
@@ -272,9 +277,11 @@ form.addEventListener('submit', (e) => {
 ccNum.addEventListener('keyup', (e) => {
     e.preventDefault()
 
-    if (!ccValidation){
+    if (!ccValidation()){
         e.preventDefault()
         visualValidationFail(ccNum)
+    } else {
+        visualValidationPass(ccNum)
     }
 })
 
