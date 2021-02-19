@@ -119,9 +119,6 @@ activitiesCostPTag.innerHTML = `Total: ${finalTotal}`
 
 //  Onload - hide sections
 
-
-
-
 const payment = document.getElementById('payment')
 const creditCardDiv = document.getElementById('credit-card')
 const paypalDiv = document.getElementById('paypal')
@@ -140,17 +137,20 @@ function hidePaymentField(method){
 
 payment.addEventListener('change', (e) => {
     if (e.target.value === 'credit-card'){
-        creditCardDiv.style.display = 'block'
+        creditCardDiv.style.display = 'block'      
         paypalDiv.style.display = 'none'
         bitcoinDiv.style.display = 'none'
     } else if(e.target.value === 'paypal'){
         paypalDiv.style.display = 'block'
         creditCardDiv.style.display = 'none'
+        creditCardDiv.disabled = true
         bitcoinDiv.style.display = 'none'
     } else {
         bitcoinDiv.style.display = 'block'
         paypalDiv.style.display = 'none'
         creditCardDiv.style.display = 'none'
+        creditCardDiv.disabled = true
+
 }
 });
 
@@ -164,7 +164,6 @@ const ccNum = document.getElementById('cc-num');
 const zipCodeInput = document.getElementById('zip');
 const cvvInput = document.getElementById('cvv');
 const form = document.querySelector("FORM");
-
 
 // helper funtions - name, email, activity, credit card payment
 
@@ -223,6 +222,7 @@ const ccValidation = () => {
     element.parentElement.lastElementChild.display = 'block';
   }
 
+if (creditCardDiv.disabled){
 form.addEventListener('submit', (e) => {
 
     if (!nameValidation()){
@@ -235,7 +235,6 @@ form.addEventListener('submit', (e) => {
     if (!emailValidation() || emailInput.value === ""){
         e.preventDefault()
         visualValidationFail(emailInput)
-        prompt('Email field is invalid')
     } else {
         visualValidationPass(emailInput)
     }
@@ -247,13 +246,35 @@ form.addEventListener('submit', (e) => {
     } else {
         registerForActivities.classList.add('valid');
     }
-        
-    // if (!ccValidation()){
-    //     e.preventDefault()
-    //     visualValidationFail(ccNum)
-    // } else {
-    //     visualValidationPass(ccNum)
-    // }
+});
+} else if (!creditCardDiv.disabled){
+    form.addEventListener('submit', (e) => {
+
+    if (!nameValidation()){
+        e.preventDefault()
+        visualValidationFail(nameInput)
+    } else {
+        visualValidationPass(nameInput)
+    }
+
+    if (!emailValidation() || emailInput.value === ""){
+        e.preventDefault()
+        visualValidationFail(emailInput)
+    } else {
+        visualValidationPass(emailInput)
+    }
+
+    if (!activityValidation()){
+        e.preventDefault()
+        registerForActivities.classList.add('not-valid');
+        console.log('activity field failed')
+
+    if (!ccValidation()){
+        e.preventDefault()
+        visualValidationFail(ccNum)
+    } else {
+        visualValidationPass(ccNum)
+    }
 
     if (!zipValidation()){
         e.preventDefault()
@@ -267,23 +288,49 @@ form.addEventListener('submit', (e) => {
         visualValidationFail(cvvInput)
     } else {
         visualValidationPass(cvvInput)
-    }
-});
+    }    
+}
+})
+}
+
+
+// function creditCardSection(){
+//         if (!ccValidation()){
+//             e.preventDefault()
+//             visualValidationFail(ccNum)
+//         } else {
+//             visualValidationPass(ccNum)
+//         }
+
+//     if (!zipValidation()){
+//         e.preventDefault()
+//         visualValidationFail(zipCodeInput)
+//     } else {
+//         visualValidationPass(zipCodeInput)
+//     }
+
+//     if (!cvvValidation()){
+//         e.preventDefault()
+//         visualValidationFail(cvvInput)
+//     } else {
+//         visualValidationPass(cvvInput)
+//     }
+// };
 
 
 
   // Real-time error message - CC Number
   
-ccNum.addEventListener('keyup', (e) => {
-    e.preventDefault()
+// ccNum.addEventListener('keyup', (e) => {
+//     e.preventDefault()
 
-    if (!ccValidation()){
-        e.preventDefault()
-        visualValidationFail(ccNum)
-    } else {
-        visualValidationPass(ccNum)
-    }
-})
+//     if (!ccValidation()){
+//         e.preventDefault()
+//         visualValidationFail(ccNum)
+//     } else {
+//         visualValidationPass(ccNum)
+//     }
+// })
 
 
 // Accessibility:
