@@ -143,14 +143,11 @@ payment.addEventListener('change', (e) => {
     } else if(e.target.value === 'paypal'){
         paypalDiv.style.display = 'block'
         creditCardDiv.style.display = 'none'
-        creditCardDiv.disabled = true
         bitcoinDiv.style.display = 'none'
     } else {
         bitcoinDiv.style.display = 'block'
         paypalDiv.style.display = 'none'
         creditCardDiv.style.display = 'none'
-        creditCardDiv.disabled = true
-
 }
 });
 
@@ -164,6 +161,11 @@ const ccNum = document.getElementById('cc-num');
 const zipCodeInput = document.getElementById('zip');
 const cvvInput = document.getElementById('cvv');
 const form = document.querySelector("FORM");
+// const button = document.querySelector("button");
+
+// const ccBox = document.querySelector(".credit-card-box");
+// console.log(ccBox)
+
 
 // helper funtions - name, email, activity, credit card payment
 
@@ -222,8 +224,8 @@ const ccValidation = () => {
     element.parentElement.lastElementChild.display = 'block';
   }
 
-if (creditCardDiv.disabled){
 form.addEventListener('submit', (e) => {
+
 
     if (!nameValidation()){
         e.preventDefault()
@@ -246,28 +248,8 @@ form.addEventListener('submit', (e) => {
     } else {
         registerForActivities.classList.add('valid');
     }
-});
-} else if (!creditCardDiv.disabled){
-    form.addEventListener('submit', (e) => {
 
-    if (!nameValidation()){
-        e.preventDefault()
-        visualValidationFail(nameInput)
-    } else {
-        visualValidationPass(nameInput)
-    }
-
-    if (!emailValidation() || emailInput.value === ""){
-        e.preventDefault()
-        visualValidationFail(emailInput)
-    } else {
-        visualValidationPass(emailInput)
-    }
-
-    if (!activityValidation()){
-        e.preventDefault()
-        registerForActivities.classList.add('not-valid');
-        console.log('activity field failed')
+        // CC PART
 
     if (!ccValidation()){
         e.preventDefault()
@@ -289,34 +271,7 @@ form.addEventListener('submit', (e) => {
     } else {
         visualValidationPass(cvvInput)
     }    
-}
 })
-}
-
-
-// function creditCardSection(){
-//         if (!ccValidation()){
-//             e.preventDefault()
-//             visualValidationFail(ccNum)
-//         } else {
-//             visualValidationPass(ccNum)
-//         }
-
-//     if (!zipValidation()){
-//         e.preventDefault()
-//         visualValidationFail(zipCodeInput)
-//     } else {
-//         visualValidationPass(zipCodeInput)
-//     }
-
-//     if (!cvvValidation()){
-//         e.preventDefault()
-//         visualValidationFail(cvvInput)
-//     } else {
-//         visualValidationPass(cvvInput)
-//     }
-// };
-
 
 
   // Real-time error message - CC Number
