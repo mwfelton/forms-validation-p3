@@ -196,7 +196,7 @@ const activityValidation = () => {
 
 const ccValidation = () => {
     const ccInput = ccNum.value
-    const ccRegex = /[4|5]\d{15}/.test(ccInput);
+    const ccRegex = /^([0-9]{4})\s?([0-9]{4})\s?([0-9]{4})\s?([0-9]{1,4})\s?$/.test(ccInput);
     return ccRegex
   }
 
