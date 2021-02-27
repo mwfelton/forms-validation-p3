@@ -133,6 +133,7 @@ function hidePaymentField(method){
     method.style.display = 'none';
 }
 
+
 // Use the payment variable above to listen for the change event on this element. When a change is detected, display the <div> element with the id that matches the value of the event.target element. And hide the other two <div> elements.
 
 payment.addEventListener('change', (e) => {
@@ -140,16 +141,21 @@ payment.addEventListener('change', (e) => {
         creditCardDiv.style.display = 'block'      
         paypalDiv.style.display = 'none'
         bitcoinDiv.style.display = 'none'
+        console.log(payment.value)
     } else if(e.target.value === 'paypal'){
         paypalDiv.style.display = 'block'
         creditCardDiv.style.display = 'none'
         bitcoinDiv.style.display = 'none'
+        console.log(payment.value)
     } else {
         bitcoinDiv.style.display = 'block'
         paypalDiv.style.display = 'none'
         creditCardDiv.style.display = 'none'
+        console.log(payment.value)
 }
 });
+
+
 
 // Form Validation:
 
@@ -158,6 +164,7 @@ payment.addEventListener('change', (e) => {
 nameInput
 const emailInput = document.getElementById('email');
 const ccNum = document.getElementById('cc-num');
+console.log(creditCardDiv)
 const zipCodeInput = document.getElementById('zip');
 const cvvInput = document.getElementById('cvv');
 const form = document.querySelector("FORM");
@@ -195,9 +202,9 @@ const activityValidation = () => {
 //   }
 
 const ccValidation = () => {
-    const ccInput = ccNum.value
-    const ccRegex = /^([0-9]{4})\s?([0-9]{4})\s?([0-9]{4})\s?([0-9]{1,4})\s?$/.test(ccInput);
-    return ccRegex
+        const ccInput = ccNum.value
+        const ccRegex = /^([0-9]{4})\s?([0-9]{4})\s?([0-9]{4})\s?([0-9]{1,4})\s?$/.test(ccInput);
+        return ccRegex
   }
 
   const zipValidation = () => {
@@ -234,9 +241,14 @@ form.addEventListener('submit', (e) => {
         visualValidationPass(nameInput)
     }
 
-    if (!emailValidation() || emailInput.value === ""){
+    if (emailInput.value === ""){
+        visualValidationFail(emailInput)
+        alert('The email address field cannot be blank, please enter an email address.')
+        e.preventDefault()
+    }else if (!emailValidation()){
         e.preventDefault()
         visualValidationFail(emailInput)
+        alert('Please enter a valid email address')
     } else {
         visualValidationPass(emailInput)
     }
@@ -250,28 +262,29 @@ form.addEventListener('submit', (e) => {
     }
 
         // CC PART
+    if (payment.value === 'credit-card'){
+        if (!ccValidation()){
+            e.preventDefault()
+            visualValidationFail(ccNum)
+        } else {
+            visualValidationPass(ccNum)
+        }
 
-    if (!ccValidation()){
-        e.preventDefault()
-        visualValidationFail(ccNum)
-    } else {
-        visualValidationPass(ccNum)
-    }
+        if (!zipValidation()){
+            e.preventDefault()
+            visualValidationFail(zipCodeInput)
+        } else {
+            visualValidationPass(zipCodeInput)
+        }
 
-    if (!zipValidation()){
-        e.preventDefault()
-        visualValidationFail(zipCodeInput)
-    } else {
-        visualValidationPass(zipCodeInput)
-    }
-
-    if (!cvvValidation()){
-        e.preventDefault()
-        visualValidationFail(cvvInput)
-    } else {
-        visualValidationPass(cvvInput)
-    }    
-})
+        if (!cvvValidation()){
+            e.preventDefault()
+            visualValidationFail(cvvInput)
+        } else {
+            visualValidationPass(cvvInput)
+        }   
+    } 
+});
 
 
   // Real-time error message - CC Number
