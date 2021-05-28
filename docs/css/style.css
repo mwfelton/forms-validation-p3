@@ -114,7 +114,7 @@ select {
 input, 
 select, 
 option {
-  font-family: 'roboto', sans-serif;
+  /* font-family: 'roboto', sans-serif; */
   transition: all 0.3s ease-out;
 }
 
@@ -326,7 +326,7 @@ button:hover {
 }
 
 .activities-box {
-  font-family: 'roboto', sans-serif;
+  /* font-family: 'roboto', sans-serif; */
   max-width: 100%;
   border-radius: 3px;
   border: 1px solid transparent;
